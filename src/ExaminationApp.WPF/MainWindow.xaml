@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExaminationApp.WPF"
         mc:Ignorable="d"
-        Title="Главная страница" Height="450" Width="800">
+        Title="Главная страница" Height="450" Width="800"
+        MinWidth="1200"
+        MinHeight="700"
+        >
     <Grid>
         <ListBox 
             x:Name="Catalog" 
@@ -14,19 +17,33 @@
           >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Image}" Width="72" Height="72" Stretch="Uniform"/>
-                        <StackPanel Grid.Column="1" Margin="8">
-                            <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
-                            <TextBlock Text="{Binding Price}" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Grid>
+                    <Border Background="#D2F6E7" CornerRadius="8" BorderThickness="1" Padding="12" Margin="6">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#D2F6E7"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Highlighted}">
+                                        <Setter Property="Background" Value="#FF8080"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid Margin="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Image}" Width="72" Height="72" Stretch="Uniform"/>
+                            <StackPanel Grid.Column="1" Margin="8">
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Category}" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Quantity}"/>
+                                <TextBlock Text="{Binding Price}" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

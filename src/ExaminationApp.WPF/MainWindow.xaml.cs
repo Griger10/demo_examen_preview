@@ -1,4 +1,5 @@
 ﻿using ExaminationApp.Core.Data;
+using Humanizer;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,11 +23,14 @@ public partial class MainWindow : Window
         InitializeComponent();
         using var db = new AppDbContext();
 
-        Catalog.ItemsSource = db.Products.ToList().Select(product => new { 
-            Image = string.IsNullOrWhiteSpace(product.Image)? null : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
+        Catalog.ItemsSource = db.Products.ToList().Select(product => new {
+            Image = string.IsNullOrWhiteSpace(product.Image) ? null : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
             Title = product.ProductName,
             Description = product.Description,
-            Price = $"${product.Price}₽"
+            Price = $"${product.Price}₽",
+            Quantity = $"{product.StockItems.Sum(el => el.Quantity)}",
+            Highlighted = product.StockItems.Sum(el => el.Quantity) > 3,
+            Category = $"Категория: {product.Category}",
         }).ToList();
     }
 }
