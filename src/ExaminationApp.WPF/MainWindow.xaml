@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExaminationApp.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Главная страница" Height="450" Width="800">
     <Grid>
-
+        <ListBox 
+            x:Name="Catalog" 
+            d:ItemsSource="{d:SampleData ItemCount=5}"
+            HorizontalContentAlignment="Stretch" Margin="0,94,0,0"
+          >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Image}" Width="72" Height="72" Stretch="Uniform"/>
+                        <StackPanel Grid.Column="1" Margin="8">
+                            <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding Price}" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Image HorizontalAlignment="Left" Height="70" Margin="714,10,0,0" VerticalAlignment="Top" Width="74" Source="Assets/logo.png"/>
+        <Label Content="Каталог товаров" HorizontalAlignment="Left" Margin="30,24,0,0" VerticalAlignment="Top" FontSize="24px"/>
     </Grid>
 </Window>

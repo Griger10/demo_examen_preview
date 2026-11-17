@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:ExaminationApp.WPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="AppWindowStyle" TargetType="Window">
+            <Setter Property="FontFamily" Value="Calibri"/>
+        </Style>
     </Application.Resources>
 </Application>
