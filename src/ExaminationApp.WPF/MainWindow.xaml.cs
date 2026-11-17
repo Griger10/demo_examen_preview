@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using ExaminationApp.Core.Data;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,5 +20,13 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        using var db = new AppDbContext();
+
+        Catalog.ItemsSource = db.Products.ToList().Select(product => new { 
+            Image = string.IsNullOrWhiteSpace(product.Image)? null : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
+            Title = product.ProductName,
+            Description = product.Description,
+            Price = $"${product.Price}₽"
+        }).ToList();
     }
 }
