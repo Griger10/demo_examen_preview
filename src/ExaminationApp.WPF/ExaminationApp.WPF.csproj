@@ -8,6 +8,9 @@
     <None Update="Assets\app_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\IMG_KB_164811.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

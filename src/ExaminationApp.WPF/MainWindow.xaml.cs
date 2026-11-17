@@ -24,14 +24,13 @@ public partial class MainWindow : Window
         InitializeComponent();
         using var db = new AppDbContext();
 
-
         Catalog.ItemsSource = db.Products.ToList().Select(product => new {
             Image = string.IsNullOrWhiteSpace(product.Image) ? null : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
             Title = product.ProductName,
             Description = product.Description,
             Price = $"{product.Price:F2}₽",
             Quantity = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity),
-            Highlighted = product.StockItems.Sum(el => el.Quantity) > 3,
+            Highlighted = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity)  > 3,
             Category = $"Категория: {product.Category}",
         }).ToList();
     }
