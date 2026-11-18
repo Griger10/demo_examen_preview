@@ -1,0 +1,34 @@
+﻿using ExaminationApp.Core.Data;
+using ExaminationApp.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ExaminationApp.Core
+{
+    public static class UserSession
+    {
+        public static User? AuthorizedUser { get; private set; }
+        public static bool isAuthorized => AuthorizedUser != null;
+
+        public static void Login(string username)
+        {
+            using var db = new AppDbContext();
+            var user = db.Users.FirstOrDefault(u => u.Login == username);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+
+            }
+            else
+            {
+                AuthorizedUser = user;
+            }
+        }
+
+        public static void Logout()
+        {
+            AuthorizedUser = null;
+        }
+    }
+}

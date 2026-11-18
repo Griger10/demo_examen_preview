@@ -1,0 +1,17 @@
+﻿<Window x:Class="ExaminationApp.WPF.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExaminationApp.WPF"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="450" Width="800">
+    <Grid>
+        <Image HorizontalAlignment="Left" Height="100" Margin="692,10,0,0" VerticalAlignment="Top" Width="100" Source="/Assets/logo.png"/>
+        <Button Background="#D2F6E7" Content="Войти" HorizontalAlignment="Center" Margin="0,240,0,0" VerticalAlignment="Top" Height="34" Width="90" Click="onLoginAuthorized"/>
+        <Button BorderThickness="0" Background="#FFFFFF" Content="Войти как гость" HorizontalAlignment="Center" Margin="0,293,0,0" VerticalAlignment="Top" Height="31" Width="90" Click="onLoginGuest"/>
+        <Label FontSize="24px" Content="Форма входа" HorizontalAlignment="Center" Margin="0,102,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="loginTxt" FontSize="14px" HorizontalAlignment="Center" Margin="0,181,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Логин:" HorizontalAlignment="Left" Margin="289,178,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

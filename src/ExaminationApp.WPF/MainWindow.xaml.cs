@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExaminationApp.WPF;
 
@@ -24,15 +25,15 @@ public partial class MainWindow : Window
         InitializeComponent();
         using var db = new AppDbContext();
 
-        Catalog.ItemsSource = db.Products.ToList().Select(product => new
+        Catalog.ItemsSource = db.Products.Include(c => c.Category).Include(s => s.StockItems).ToList().Select(product => new
         {
             Image = string.IsNullOrWhiteSpace(product.Image) ? null : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
             Title = product.ProductName,
             Description = product.Description,
             Price = $"{product.Price:F2}₽",
-            Quantity = $"Количество: {db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity)} шт.",
-            Highlighted = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity) <= 3,
-            Category = $"Категория: {db.Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId)?.CategoryName ?? "Неизвестная категория"}",
+            Quantity = $"Количество: {product.StockItems.Sum(stock => stock.Quantity)} шт.",
+            Highlighted = product.StockItems.Sum(stock => stock.Quantity) <= 3,
+            Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
         }).ToList();
     }
 }
