@@ -32,7 +32,7 @@ public partial class MainWindow : Window
             Price = $"{product.Price:F2}₽",
             Quantity = $"Количество: {db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity)} шт.",
             Highlighted = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity) <= 3,
-            Category = $"Категория: {product.Category}",
+            Category = $"Категория: {db.Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId)?.CategoryName ?? "Неизвестная категория"}",
         }).ToList();
     }
 }
