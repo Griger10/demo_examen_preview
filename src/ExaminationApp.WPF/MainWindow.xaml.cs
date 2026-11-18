@@ -30,8 +30,8 @@ public partial class MainWindow : Window
             Title = product.ProductName,
             Description = product.Description,
             Price = $"{product.Price:F2}₽",
-            Quantity = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity),
-            Highlighted = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity) > 3,
+            Quantity = $"Количество: {db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity)} шт.",
+            Highlighted = db.StockItems.Where(stock => stock.ProductId == product.ProductId).Sum(stock => stock.Quantity) <= 3,
             Category = $"Категория: {product.Category}",
         }).ToList();
     }
