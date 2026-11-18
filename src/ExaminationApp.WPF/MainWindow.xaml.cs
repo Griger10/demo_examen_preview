@@ -25,15 +25,27 @@ public partial class MainWindow : Window
         InitializeComponent();
         using var db = new AppDbContext();
 
-        Catalog.ItemsSource = db.Products.Include(c => c.Category).Include(s => s.StockItems).ToList().Select(product => new
-        {
-            Image = string.IsNullOrWhiteSpace(product.Image) ? null : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
-            Title = product.ProductName,
-            Description = product.Description,
-            Price = $"{product.Price:F2}₽",
-            Quantity = $"Количество: {product.StockItems.Sum(stock => stock.Quantity)} шт.",
-            Highlighted = product.StockItems.Sum(stock => stock.Quantity) <= 3,
-            Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
-        }).ToList();
+        var products = db.Products.Include(c => c.Category).Include(s => s.StockItems).Include(f => f.Factory)
+            .ToList().Select(product =>
+            {
+                var totalQuantity = product.StockItems.Sum(stock => stock.Quantity);
+                var stockStatus = totalQuantity <= 5 ? "мало" : "много";
+
+                return new
+                {
+                    Image = string.IsNullOrWhiteSpace(product.Image)
+                        ? null
+                        : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
+                    Title = product.ProductName,
+                    Details = product.Details,
+                    Price = $"{product.Price:F2}₽",
+                    Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
+                    Highlighted = totalQuantity <= 3,
+                    Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
+                    FactoryName = product.Factory?.FactoryName ?? "Неизвестный производитель",
+                };
+            }).ToList();
+
+        Catalog.ItemsSource = products;
     }
 }

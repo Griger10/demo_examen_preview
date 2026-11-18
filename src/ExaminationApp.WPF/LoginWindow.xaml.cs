@@ -34,7 +34,7 @@ namespace ExaminationApp.WPF
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка: Пользователь не найден", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Ошибка", "Ошибка: Пользователь не найден", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
