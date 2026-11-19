@@ -31,9 +31,15 @@ public partial class MainWindow : Window
         {
             UserFio.Content = $"Пользователь: {user?.LastName} {user?.FirstName} {user?.Fathername}";
             List<String> sortingVariants = ["По возрастанию цены", "По убыванию цены"];
+            var categoriesNames = db.Categories.Select(c => c.CategoryName).ToList();
+            CategoriesSelect.ItemsSource = categoriesNames;
             SortingOptions.ItemsSource = sortingVariants;
             SortingOptions.Visibility = Visibility.Visible;
             SortingLabel.Visibility = Visibility.Visible;
+            CategoriesLabel.Visibility = Visibility.Visible;
+            CategoriesSelect.Visibility = Visibility.Visible;
+            SearchLabel.Visibility = Visibility.Visible;
+            SearchTextBox.Visibility = Visibility.Visible;
         }
         else
             UserFio.Content = $"Пользователь: Гость";
@@ -54,7 +60,7 @@ public partial class MainWindow : Window
                         : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
                     Title = product.ProductName,
                     Details = product.Details,
-                    Price = missingOrdersForLastMonth > 0? $"{product.Price:F2}₽": $"{product.Price * 0.75m:F2}₽ (со скидкой 25%)",
+                    Price = missingOrdersForLastMonth > 0? $"{product.Price:F2}₽ (без скидки)": $"{product.Price * 0.75m:F2}₽ (со скидкой 25%)",
                     Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
                     Highlighted = totalQuantity <= 3,
                     Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
