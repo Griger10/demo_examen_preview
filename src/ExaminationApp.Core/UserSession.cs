@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ExaminationApp.Core
 {
+    // Используется для хранения локальной сессии текущего пользователя
     public static class UserSession
     {
         public static User? AuthorizedUser { get; private set; }
