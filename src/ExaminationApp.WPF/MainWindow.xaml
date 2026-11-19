@@ -51,5 +51,7 @@
         <Label Content="Каталог товаров" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" FontSize="24px"/>
         <Label x:Name="UserFio" Content="Пользователь:" HorizontalAlignment="Left" Margin="250,23,0,0" VerticalAlignment="Top"/>
         <Button Content="Выйти из системы" HorizontalAlignment="Left" Margin="38,57,0,0" VerticalAlignment="Top" Height="23" Width="116" Click="OnLogout"/>
+        <ComboBox x:Name="SortingOptions" HorizontalAlignment="Left" Margin="280,58,0,0" VerticalAlignment="Top" Width="174" SelectionChanged="OnChangeSort" Visibility="Collapsed"/>
+        <Label x:Name="SortingLabel" Content="Сортировка: " HorizontalAlignment="Left" Margin="193,56,0,0" VerticalAlignment="Top" Visibility="Collapsed"/>
     </Grid>
 </Window>

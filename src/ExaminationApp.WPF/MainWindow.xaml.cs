@@ -28,7 +28,13 @@ public partial class MainWindow : Window
 
         var user = UserSession.AuthorizedUser;
         if (user != null)
+        {
             UserFio.Content = $"Пользователь: {user?.LastName} {user?.FirstName} {user?.Fathername}";
+            List<String> sortingVariants = ["По возрастанию цены", "По убыванию цены"];
+            SortingOptions.ItemsSource = sortingVariants;
+            SortingOptions.Visibility = Visibility.Visible;
+            SortingLabel.Visibility = Visibility.Visible;
+        }
         else
             UserFio.Content = $"Пользователь: Гость";
 
@@ -64,5 +70,63 @@ public partial class MainWindow : Window
         LoginWindow window = new();
         window.Show();
         this.Close();
+    }
+
+    private void OnChangeSort(object sender, SelectionChangedEventArgs e)
+    {
+        using var db = new AppDbContext();
+        if (SortingOptions.SelectedValue == "По возрастанию цены")
+        {
+            var products = db.Products.Include(c => c.Category).Include(s => s.StockItems).Include(f => f.Factory)
+            .ToList().OrderBy(p => p.Price).Select(product =>
+            {
+                var totalQuantity = product.StockItems.Sum(stock => stock.Quantity);
+                var stockStatus = totalQuantity <= 5 ? "мало" : "много";
+                var missingOrdersForLastMonth = db.OrderHeaders.Select(o => o.OrderDate)
+                    .Where(date => date >= DateTime.Now.AddMonths(-1))
+                    .Count();
+
+                return new
+                {
+                    Image = string.IsNullOrWhiteSpace(product.Image)
+                        ? null
+                        : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
+                    Title = product.ProductName,
+                    Details = product.Details,
+                    Price = missingOrdersForLastMonth > 0 ? $"{product.Price:F2}₽" : $"{product.Price * 0.75m:F2}₽ (со скидкой 25%)",
+                    Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
+                    Highlighted = totalQuantity <= 3,
+                    Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
+                    FactoryName = product.Factory?.FactoryName ?? "Неизвестный производитель",
+                };
+            }).ToList();
+            Catalog.ItemsSource = products;
+        } else if (SortingOptions.SelectedValue == "По убыванию цены")
+        {
+            var products = db.Products.Include(c => c.Category).Include(s => s.StockItems).Include(f => f.Factory)
+            .ToList().OrderBy(p => -p.Price).Select(product =>
+            {
+                var totalQuantity = product.StockItems.Sum(stock => stock.Quantity);
+                var stockStatus = totalQuantity <= 5 ? "мало" : "много";
+                var missingOrdersForLastMonth = db.OrderHeaders.Select(o => o.OrderDate)
+                    .Where(date => date >= DateTime.Now.AddMonths(-1))
+                    .Count();
+
+                return new
+                {
+                    Image = string.IsNullOrWhiteSpace(product.Image)
+                        ? null
+                        : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
+                    Title = product.ProductName,
+                    Details = product.Details,
+                    Price = missingOrdersForLastMonth > 0 ? $"{product.Price:F2}₽" : $"{product.Price * 0.75m:F2}₽ (со скидкой 25%)",
+                    Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
+                    Highlighted = totalQuantity <= 3,
+                    Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
+                    FactoryName = product.Factory?.FactoryName ?? "Неизвестный производитель",
+                };
+            }).ToList();
+            Catalog.ItemsSource = products;
+        }
     }
 }
