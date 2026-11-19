@@ -54,8 +54,8 @@
         <ComboBox x:Name="SortingOptions" HorizontalAlignment="Left" Margin="280,58,0,0" VerticalAlignment="Top" Width="174" SelectionChanged="OnChangeSort" Visibility="Collapsed" d:Visibility="Visible"/>
         <Label x:Name="SortingLabel" Content="Сортировка: " HorizontalAlignment="Left" Margin="193,56,0,0" VerticalAlignment="Top" Visibility="Collapsed" d:Visibility="Visible"/>
         <Label x:Name="CategoriesLabel" Content="Категория: " HorizontalAlignment="Left" Margin="486,54,0,0" VerticalAlignment="Top" Visibility="Collapsed" d:Visibility="Visible"/>
-        <ComboBox x:Name ="CategoriesSelect" HorizontalAlignment="Left" Margin="578,56,0,0" VerticalAlignment="Top" Width="132" Visibility="Collapsed" d:Visibility="Visible"/>
+        <ComboBox x:Name ="CategoriesSelect" HorizontalAlignment="Left" Margin="578,56,0,0" VerticalAlignment="Top" Width="132" Visibility="Collapsed" d:Visibility="Visible" SelectionChanged="OnChangeCategory"/>
         <Label x:Name="SearchLabel" Content="Поиск: " HorizontalAlignment="Left" Margin="748,54,0,0" VerticalAlignment="Top" Visibility="Collapsed" d:Visibility="Visible"/>
-        <TextBox x:Name="SearchTextBox" HorizontalAlignment="Left" Margin="803,58,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Visibility="Collapsed" d:Visibility="Visible"/>
+        <TextBox x:Name="SearchTextBox" HorizontalAlignment="Left" Margin="803,58,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Visibility="Collapsed" d:Visibility="Visible" TextChanged="OnSearchTextChanged"/>
     </Grid>
 </Window>
