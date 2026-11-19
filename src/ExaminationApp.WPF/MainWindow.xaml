@@ -37,7 +37,7 @@
                             <Image Source="{Binding Image}" Width="72" Height="72" Stretch="Uniform"/>
                             <StackPanel Grid.Column="1" Margin="8"/>
                             <StackPanel/>
-                            <TextBlock FontSize="18px" Text="{Binding Price}" FontWeight="SemiBold" Grid.Column="1" Margin="312,19,48,48"/>
+                            <TextBlock FontSize="18px" Text="{Binding Price}" FontWeight="SemiBold" Grid.Column="1" Margin="312,19,-33,48" Grid.ColumnSpan="2"/>
                             <TextBlock FontSize="15px" FontWeight="Bold" Margin="95,0,-135,68" Grid.Column="1" Grid.ColumnSpan="2"><Run Text="{Binding FactoryName, Mode=OneWay}"/><Run Text=" "/><Run Text=" | "/><Run Text=" "/><Run Text="{Binding Title, Mode=OneWay}"/></TextBlock>
                             <TextBlock Text="{Binding Details}" TextWrapping="Wrap" Grid.Column="1" Margin="8,58,8,13"/>
                             <TextBlock Text="{Binding Quantity}" Grid.Column="1" Margin="8,37,8,36"/>

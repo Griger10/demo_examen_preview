@@ -30,6 +30,9 @@ public partial class MainWindow : Window
             {
                 var totalQuantity = product.StockItems.Sum(stock => stock.Quantity);
                 var stockStatus = totalQuantity <= 5 ? "мало" : "много";
+                var missingOrdersForLastMonth = db.OrderHeaders.Select(o => o.OrderDate)
+                    .Where(date => date >= DateTime.Now.AddMonths(-1))
+                    .Count();
 
                 return new
                 {
@@ -38,7 +41,7 @@ public partial class MainWindow : Window
                         : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
                     Title = product.ProductName,
                     Details = product.Details,
-                    Price = $"{product.Price:F2}₽",
+                    Price = missingOrdersForLastMonth > 0? $"{product.Price:F2}₽": $"{product.Price * 0.75m:F2}₽ (со скидкой 25%)",
                     Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
                     Highlighted = totalQuantity <= 3,
                     Category = $"Категория: {product.Category?.CategoryName ?? "Неизвестная категория"}",
