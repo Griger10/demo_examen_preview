@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore;
+using ExaminationApp.Core;
 
 namespace ExaminationApp.WPF;
 
@@ -24,6 +25,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         using var db = new AppDbContext();
+
+        var user = UserSession.AuthorizedUser;
+        if (user != null)
+            UserFio.Content = $"Пользователь: {user?.LastName} {user?.FirstName} {user?.Fathername}";
+        else
+            UserFio.Content = $"Пользователь: Гость";
 
         var products = db.Products.Include(c => c.Category).Include(s => s.StockItems).Include(f => f.Factory)
             .ToList().Select(product =>
@@ -50,5 +57,12 @@ public partial class MainWindow : Window
             }).ToList();
 
         Catalog.ItemsSource = products;
+    }
+
+    private void OnLogout(object sender, RoutedEventArgs e)
+    {
+        LoginWindow window = new();
+        window.Show();
+        this.Close();
     }
 }
