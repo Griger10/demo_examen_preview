@@ -15,6 +15,11 @@
             d:ItemsSource="{d:SampleData ItemCount=5}"
             HorizontalContentAlignment="Stretch" Margin="0,94,0,0"
           >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="OnProductDescriptionOpen"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border CornerRadius="8" BorderThickness="1" Padding="12" Margin="6">

@@ -1,0 +1,20 @@
+<Window x:Class="ExaminationApp.WPF.ProductDescriptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExaminationApp.WPF"
+        mc:Ignorable="d"
+        Title="ProductDescription" Height="450" Width="451">
+    <Grid>
+        <Image x:Name="ProductImage" HorizontalAlignment="Left" Height="118" Margin="26,58,0,0" VerticalAlignment="Top" Width="111"/>
+        <TextBlock x:Name="ProductTitle" FontWeight="Bold" TextWrapping="Wrap" FontSize="18" HorizontalAlignment="Left" Height="65" Margin="158,29,0,0" Text="TextBox" VerticalAlignment="Top" Width="260"/>
+        <Button Content="Назад" Background="#D2F6E7" HorizontalAlignment="Left" Margin="26,14,0,0" VerticalAlignment="Top" Click="OnOpenMainWindow" />
+        <TextBlock x:Name="ProductDescription" HorizontalAlignment="Left" Margin="226,113,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="68" Width="198"/>
+        <TextBlock x:Name="ProductDetails" HorizontalAlignment="Left" Margin="226,217,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="97" Width="192"/>
+        <TextBlock x:Name="ProductPrice" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <Button x:Name="OrderButton" Background="#D2F6E7" Content="Заказать" FontSize="16px" HorizontalAlignment="Left" Margin="151,354,0,0" VerticalAlignment="Top" Height="33" Width="137"/>
+        <TextBlock x:Name="ProductCategory" HorizontalAlignment="Left" Margin="10,209,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="22" Width="153"/>
+        <TextBlock x:Name="AvailableSizes" HorizontalAlignment="Left" Margin="10,231,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="35" Width="175"/>
+    </Grid>
+</Window>

@@ -1,4 +1,4 @@
-﻿using ExaminationApp.Core;
+using ExaminationApp.Core;
 using ExaminationApp.Core.Data;
 using ExaminationApp.Core.Models;
 using Humanizer;
@@ -51,23 +51,28 @@ public partial class MainWindow : Window
         }
         var totalQuantity = products.SelectMany(p => p.StockItems).Sum(stock => stock.Quantity);
         var stockStatus = totalQuantity <= 5 ? "мало" : "много";
-        var missingOrdersForLastMonth = db.OrderHeaders.Select(o => o.OrderDate)
-            .Where(date => date >= DateTime.Now.AddMonths(-1))
-            .Count();
 
-        Catalog.ItemsSource = products.Select(p => new
+        Catalog.ItemsSource = products.Select(p =>
         {
-            Image = string.IsNullOrWhiteSpace(p.Image)
+            var missingOrdersForLastMonth = db.OrderHeaders.Include(o => o.OrderItems).Select(o => o)
+                   .Where(o => o.OrderDate >= DateTime.Now.AddMonths(-1))
+                   .Where(o => !o.OrderItems.Any(item => item.ProductId == p.ProductId))
+                   .Count();
+            return new
+            {
+                ProductId = p.ProductId,
+                Image = string.IsNullOrWhiteSpace(p.Image)
                         ? null
                         : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", p.Image),
-            Title = p.ProductName,
-            Details = p.Details,
-            Price = missingOrdersForLastMonth > 0 ? $"{p.Price:F2}₽ (без скидки)" : $"{p.Price * 0.75m:F2}₽ (со скидкой 25%)",
-            Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
-            Highlighted = totalQuantity <= 3,
-            Category = $"Категория: {p.Category?.CategoryName ?? "Неизвестная категория"}",
-            FactoryName = p.Factory?.FactoryName ?? "Неизвестный производитель",
-        }).ToList();
+                Title = p.ProductName,
+                Details = p.Details,
+                Price = missingOrdersForLastMonth > 0 ? $"{p.Price:F2}₽ (без скидки)" : $"{p.Price * 0.75m:F2}₽ (со скидкой 25%)",
+                Quantity = $"Количество: {totalQuantity} шт. ({stockStatus})",
+                Highlighted = totalQuantity <= 3,
+                Category = $"Категория: {p.Category?.CategoryName ?? "Неизвестная категория"}",
+                FactoryName = p.Factory?.FactoryName ?? "Неизвестный производитель",
+            };
+        });
     }
     public MainWindow()
     {
@@ -97,12 +102,14 @@ public partial class MainWindow : Window
             {
                 var totalQuantity = product.StockItems.Sum(stock => stock.Quantity);
                 var stockStatus = totalQuantity <= 5 ? "мало" : "много";
-                var missingOrdersForLastMonth = db.OrderHeaders.Select(o => o.OrderDate)
-                    .Where(date => date >= DateTime.Now.AddMonths(-1))
+                var missingOrdersForLastMonth = db.OrderHeaders.Include(o => o.OrderItems).Select(o => o)
+                    .Where(o => o.OrderDate >= DateTime.Now.AddMonths(-1))
+                    .Where(o => !o.OrderItems.Any(item => item.ProductId == product.ProductId))
                     .Count();
 
                 return new
                 {
+                    ProductId = product.ProductId,
                     Image = string.IsNullOrWhiteSpace(product.Image)
                         ? null
                         : System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", product.Image),
@@ -124,6 +131,7 @@ public partial class MainWindow : Window
         LoginWindow window = new();
         window.Show();
         this.Close();
+        UserSession.Logout();
     }
 
     private void OnChangeSort(object sender, SelectionChangedEventArgs e)
@@ -139,5 +147,17 @@ public partial class MainWindow : Window
     private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
     {
         ApplyFilters();
+    }
+
+    private void OnProductDescriptionOpen(object sender, MouseButtonEventArgs e)
+    {
+        if (UserSession.AuthorizedUser == null)
+            return;
+        if (Catalog.SelectedItem is not { } selectedProduct)
+            return;
+
+        dynamic product = selectedProduct;
+        ProductDescriptionWindow window = new(product.ProductId);
+        window.Show();
     }
 }
