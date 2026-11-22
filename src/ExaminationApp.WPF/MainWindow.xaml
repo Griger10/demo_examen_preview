@@ -55,12 +55,15 @@
         <Image HorizontalAlignment="Left" Height="70" Margin="1090,10,0,0" VerticalAlignment="Top" Width="74" Source="pack://siteoforigin:,,,/Assets/logo.png"/>
         <Label Content="Каталог товаров" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" FontSize="24px"/>
         <Label x:Name="UserFio" Content="Пользователь:" HorizontalAlignment="Left" Margin="250,23,0,0" VerticalAlignment="Top"/>
-        <Button Content="Выйти из системы" HorizontalAlignment="Left" Margin="38,57,0,0" VerticalAlignment="Top" Height="23" Width="116" Click="OnLogout"/>
+        <Button Background="#D2F6E7" Content="Выйти из системы" HorizontalAlignment="Left" Margin="38,57,0,0" VerticalAlignment="Top" Height="23" Width="116" Click="OnLogout"/>
         <ComboBox x:Name="SortingOptions" HorizontalAlignment="Left" Margin="280,58,0,0" VerticalAlignment="Top" Width="174" SelectionChanged="OnChangeSort" Visibility="Collapsed" d:Visibility="Visible"/>
         <Label x:Name="SortingLabel" Content="Сортировка: " HorizontalAlignment="Left" Margin="193,56,0,0" VerticalAlignment="Top" Visibility="Collapsed" d:Visibility="Visible"/>
         <Label x:Name="CategoriesLabel" Content="Категория: " HorizontalAlignment="Left" Margin="486,54,0,0" VerticalAlignment="Top" Visibility="Collapsed" d:Visibility="Visible"/>
         <ComboBox x:Name ="CategoriesSelect" HorizontalAlignment="Left" Margin="578,56,0,0" VerticalAlignment="Top" Width="132" Visibility="Collapsed" d:Visibility="Visible" SelectionChanged="OnChangeCategory"/>
         <Label x:Name="SearchLabel" Content="Поиск: " HorizontalAlignment="Left" Margin="748,54,0,0" VerticalAlignment="Top" Visibility="Collapsed" d:Visibility="Visible"/>
         <TextBox x:Name="SearchTextBox" HorizontalAlignment="Left" Margin="803,58,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Visibility="Collapsed" d:Visibility="Visible" TextChanged="OnSearchTextChanged"/>
+        <Button x:Name="OrderInfoButton" Background="#D2F6E7" Content="Состав заказа" HorizontalAlignment="Left" Margin="960,10,0,0" VerticalAlignment="Top" Width="94" Click="OnOrderInfo" d:Visibility="Visible" Visibility="Collapsed"/>
+        <Button x:Name="CreateOrderButton" Background="#D2F6E7" Content="Оформить заказ" HorizontalAlignment="Left" Margin="960,42,0,0" VerticalAlignment="Top" d:Visibility="Visible" Visibility="Collapsed" Click="OnCreateOrder"/>
+        <Button x:Name="DropOrderButton" Background="#D2F6E7" Content="Отменить заказ" HorizontalAlignment="Left" Margin="960,74,0,0" VerticalAlignment="Top" Width="94" Click="OnDropOrder" d:Visibility="Visible" Visibility="Collapsed"/>
     </Grid>
 </Window>

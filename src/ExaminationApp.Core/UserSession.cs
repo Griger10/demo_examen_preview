@@ -6,11 +6,14 @@ using System.Text;
 
 namespace ExaminationApp.Core
 {
-    // Используется для хранения локальной сессии текущего пользователя
+    // Используется для хранения локальной сессии текущего пользователя и его корзины
     public static class UserSession
     {
         public static User? AuthorizedUser { get; private set; }
         public static bool isAuthorized => AuthorizedUser != null;
+        public static List<Product> Cart = [];
+        public static List<int> Quantities = [];
+        public static List<int> CartSizeIds = [];
 
         public static void Login(string username)
         {
@@ -30,6 +33,9 @@ namespace ExaminationApp.Core
         public static void Logout()
         {
             AuthorizedUser = null;
+            Cart = [];
+            Quantities = [];
+            CartSizeIds = [];
         }
     }
 }

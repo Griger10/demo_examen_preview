@@ -19,9 +19,12 @@ namespace ExaminationApp.WPF
     /// </summary>
     public partial class ProductDescriptionWindow : Window
     {
-        public ProductDescriptionWindow(int ProductId)
+        public int ProductId { get; private set; }
+
+        public ProductDescriptionWindow(int productId)
         {
             InitializeComponent();
+            ProductId = productId;
 
             using var db = new AppDbContext();
             var p = db.Products.Include(p => p.Category).Include(p => p.StockItems).FirstOrDefault(p => p.ProductId == ProductId);
@@ -50,6 +53,13 @@ namespace ExaminationApp.WPF
         private void OnOpenMainWindow(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void OnStartOrdering(object sender, RoutedEventArgs e)
+        {
+            ProductOrderWindow window = new(ProductId);
+            this.Close();
+            window.Show();
         }
     }
 }

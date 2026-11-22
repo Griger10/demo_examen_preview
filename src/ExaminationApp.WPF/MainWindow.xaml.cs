@@ -93,6 +93,9 @@ public partial class MainWindow : Window
             CategoriesSelect.Visibility = Visibility.Visible;
             SearchLabel.Visibility = Visibility.Visible;
             SearchTextBox.Visibility = Visibility.Visible;
+            OrderInfoButton.Visibility = Visibility.Visible;
+            CreateOrderButton.Visibility = Visibility.Visible;
+            DropOrderButton.Visibility = Visibility.Visible;
         }
         else
             UserFio.Content = $"Пользователь: Гость";
@@ -159,5 +162,105 @@ public partial class MainWindow : Window
         dynamic product = selectedProduct;
         ProductDescriptionWindow window = new(product.ProductId);
         window.Show();
+    }
+
+    private void OnOrderInfo(object sender, RoutedEventArgs e)
+    {
+        if (UserSession.AuthorizedUser == null)
+            return;
+        if (UserSession.Cart.Count == 0)
+        {
+            MessageBox.Show("Корзина пуста!");
+            return;
+        }
+        List<String> orderLines = [];
+        for (int i = 0; i < UserSession.Cart.Count; i++)
+        {
+            var product = UserSession.Cart[i];
+            var quantity = UserSession.Quantities[i];
+            orderLines.Add($"\nТовар: {product.ProductName}, Количество: {quantity} шт.,  Цена: {product.Price * quantity:F2}₽");
+        }
+        MessageBox.Show("Состав заказа", String.Join("", orderLines) + $"\n\nОбщая стоимость: {UserSession.Cart.Zip(UserSession.Quantities, (p, q) => p.Price * q).Sum():F2}₽");
+    }
+
+    private void OnDropOrder(object sender, RoutedEventArgs e)
+    {
+        if (UserSession.AuthorizedUser == null)
+            return;
+        UserSession.Cart.Clear();
+        UserSession.Quantities.Clear();
+        UserSession.CartSizeIds.Clear();
+        MessageBox.Show("Заказ успешно отменен!");
+    }
+
+    private void OnCreateOrder(object sender, RoutedEventArgs e)
+    {
+        if (UserSession.AuthorizedUser == null)
+            return;
+
+        if (UserSession.Cart.Count == 0)
+        {
+            MessageBox.Show("Корзина пуста.");
+            return;
+        }
+
+        using var db = new AppDbContext();
+        var orderNumber = db.OrderHeaders.Any() ? db.OrderHeaders.Max(o => o.OrderNumber) + 1 : 1;
+        var orderHeader = new OrderHeader
+        {
+            OrderNumber = orderNumber,
+            UserId = UserSession.AuthorizedUser.UserId,
+            OrderDate = DateTime.Now,
+        };
+
+        var nextOrderRowId = db.OrderItems.Any() ? db.OrderItems.Max(o => o.OrderRowId) + 1 : 1;
+        var orderItems = new List<OrderItem>();
+        for (var i = 0; i < UserSession.Cart.Count; i++)
+        {
+            var product = UserSession.Cart[i];
+            var remaining = UserSession.Quantities[i];
+            var sizeId = UserSession.CartSizeIds[i];
+            var stockItems = db.StockItems
+                .Where(si => si.ProductId == product.ProductId && si.SizeId == sizeId && si.Quantity > 0)
+                .OrderBy(si => si.StockId)
+                .ToList();
+
+            if (stockItems.Sum(si => si.Quantity) < remaining)
+            {
+                MessageBox.Show($"Недостаточно товара «{product.ProductName}» выбранного размера. Обновите корзину.");
+                return;
+            }
+
+            foreach (var stock in stockItems)
+            {
+                var quantityFromStock = Math.Min(remaining, stock.Quantity);
+                if (quantityFromStock <= 0)
+                    continue;
+
+                orderItems.Add(new OrderItem
+                {
+                    OrderRowId = nextOrderRowId++,
+                    ProductId = product.ProductId,
+                    Quantity = quantityFromStock,
+                    OrderNumber = orderNumber,
+                    CategoryId = product.CategoryId,
+                    SizeId = sizeId,
+                    FactoryId = stock.FactoryId,
+                });
+                stock.Quantity -= quantityFromStock;
+                remaining -= quantityFromStock;
+                if (remaining == 0)
+                    break;
+            }
+        }
+
+        orderHeader.OrderItems = orderItems;
+        db.OrderHeaders.Add(orderHeader);
+        db.SaveChanges();
+
+        UserSession.Cart.Clear();
+        UserSession.Quantities.Clear();
+        UserSession.CartSizeIds.Clear();
+        MessageBox.Show("Заказ успешно сохранён!");
     }
 }
