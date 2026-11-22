@@ -44,10 +44,12 @@ public partial class MainWindow : Window
             else if (SortingOptions.SelectedValue == "По убыванию цены")
                 products = products.OrderBy(p => -p.Price).ToList();
         }
-        if (!string.IsNullOrWhiteSpace(SearchTextBox.Text.Trim()))
+        if (!string.IsNullOrWhiteSpace(SearchTextBox.Text))
         {
-            var searchText = SearchTextBox.Text.Trim().ToLower();
-            products = products.Where(p => p.ProductName.ToLower().Contains(searchText) || p.Description.ToLower().Contains(searchText)).ToList();
+            var searchText = SearchTextBox.Text.Trim();
+            products = products
+                .Where(p => p.ProductName?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true)
+                .ToList();
         }
         var totalQuantity = products.SelectMany(p => p.StockItems).Sum(stock => stock.Quantity);
         var stockStatus = totalQuantity <= 5 ? "мало" : "много";
@@ -72,7 +74,7 @@ public partial class MainWindow : Window
                 Category = $"Категория: {p.Category?.CategoryName ?? "Неизвестная категория"}",
                 FactoryName = p.Factory?.FactoryName ?? "Неизвестный производитель",
             };
-        });
+        }).ToList();
     }
     public MainWindow()
     {

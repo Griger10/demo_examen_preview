@@ -1,48 +1,63 @@
-﻿using ExaminationApp.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ExaminationApp.Core;
+using ExaminationApp.Core.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
-namespace ExaminationApp.WPF
+namespace ExaminationApp.WPF;
+
+public partial class AdministratorWindow : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для AdministratorWindow.xaml
-    /// </summary>
-    public partial class AdministratorWindow : Window
+    public AdministratorWindow()
     {
-        public AdministratorWindow()
-        {
-            InitializeComponent();
-            using var db = new AppDbContext();
-            var orders = db.OrderHeaders.Include(oh => oh.OrderItems).Include(oh => oh.User)
-                .OrderBy(oh => oh.OrderNumber).ToList().Select(oh =>
+        InitializeComponent();
+        LoadOrders();
+    }
+
+    private void LoadOrders()
+    {
+        using var db = new AppDbContext();
+        OrderList.ItemsSource = db.OrderHeaders
+            .Include(order => order.User)
+            .Include(order => order.OrderItems)
+                .ThenInclude(item => item.Product)
+            .OrderByDescending(order => order.OrderDate)
+            .Select(order => new OrderSummary
             {
-                return new
-                {
-                    OrderTitle = $"Заказ №{oh.OrderNumber}",
-                    OrderDate = oh.OrderDate,
-                    CustomerFio = $"Клиент: {oh.User.LastName} {oh.User.FirstName} {oh.User.Fathername}",
-                    TotalPrice = $"{db.OrderItems.Include(oi => oi.Product)
-                    .Where(oi => oi.OrderNumber == oh.OrderNumber).Sum(oi => oi.Product.Price * oi.Quantity):F2} р."
-                };
-            });
-            OrderList.ItemsSource = orders;
-        }
-        public void OnOpenMainWindow(object sender, RoutedEventArgs e)
-        {
-            MainWindow window = new();
-            window.Show();
-            Close();
-        }
+                OrderNumber = order.OrderNumber,
+                OrderTitle = $"Заказ №{order.OrderNumber}",
+                OrderDate = order.OrderDate,
+                CustomerFio = $"Клиент: {order.User.LastName} {order.User.FirstName} {order.User.Fathername}",
+                TotalPrice = order.OrderItems.Sum(item => item.Product.Price * item.Quantity) ?? 0
+            })
+            .ToList();
+    }
+
+    private void OnOrderDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (OrderList.SelectedItem is not OrderSummary order)
+            return;
+
+        var isAdmin = UserSession.AuthorizedUser?.Role.Role1 == "Администратор";
+        var window = new OrderDetailsWindow(order.OrderNumber, isAdmin);
+        window.Owner = this;
+        window.Closed += (_, _) => LoadOrders();
+        window.ShowDialog();
+    }
+
+    private void OnOpenMainWindow(object sender, RoutedEventArgs e)
+    {
+        new MainWindow().Show();
+        Close();
+    }
+
+    public sealed class OrderSummary
+    {
+        public int OrderNumber { get; set; }
+        public string OrderTitle { get; set; } = "";
+        public DateTime OrderDate { get; set; }
+        public string CustomerFio { get; set; } = "";
+        public decimal TotalPrice { get; set; }
     }
 }
