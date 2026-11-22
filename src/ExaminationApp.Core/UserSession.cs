@@ -3,6 +3,7 @@ using ExaminationApp.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExaminationApp.Core
 {
@@ -18,7 +19,7 @@ namespace ExaminationApp.Core
         public static void Login(string username)
         {
             using var db = new AppDbContext();
-            var user = db.Users.FirstOrDefault(u => u.Login == username);
+            var user = db.Users.Include(u => u.Role).FirstOrDefault(u => u.Login == username);
             if (user == null)
             {
                 throw new Exception("User not found");

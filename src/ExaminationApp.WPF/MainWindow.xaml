@@ -47,11 +47,13 @@
                             <TextBlock Text="{Binding Details}" TextWrapping="Wrap" Grid.Column="1" Margin="8,58,8,13"/>
                             <TextBlock Text="{Binding Quantity}" Grid.Column="1" Margin="8,37,8,36"/>
                             <TextBlock Text="{Binding Category}" FontWeight="SemiBold" Grid.Column="1" Margin="8,19,8,54"/>
+
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Button x:Name="AdminButton" Background="#D2F6E7" FontSize="14" Content="Административная панель" HorizontalAlignment="Left" Margin="773,7,0,0" VerticalAlignment="Top" Height="25" d:Visibility="Visible" Visibility="Collapsed" Click="OnOpenManagementPanel"/>
         <Image HorizontalAlignment="Left" Height="70" Margin="1090,10,0,0" VerticalAlignment="Top" Width="74" Source="pack://siteoforigin:,,,/Assets/logo.png"/>
         <Label Content="Каталог товаров" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" FontSize="24px"/>
         <Label x:Name="UserFio" Content="Пользователь:" HorizontalAlignment="Left" Margin="250,23,0,0" VerticalAlignment="Top"/>

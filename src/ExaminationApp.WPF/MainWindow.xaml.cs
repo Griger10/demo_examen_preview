@@ -96,6 +96,10 @@ public partial class MainWindow : Window
             OrderInfoButton.Visibility = Visibility.Visible;
             CreateOrderButton.Visibility = Visibility.Visible;
             DropOrderButton.Visibility = Visibility.Visible;
+            if (user.Role.Role1 == "Менеджер" || user.Role.Role1 == "Администратор")
+            {
+                AdminButton.Visibility = Visibility.Visible;
+            }
         }
         else
             UserFio.Content = $"Пользователь: Гость";
@@ -262,5 +266,12 @@ public partial class MainWindow : Window
         UserSession.Quantities.Clear();
         UserSession.CartSizeIds.Clear();
         MessageBox.Show("Заказ успешно сохранён!");
+    }
+
+    public void OnOpenManagementPanel(object sender, RoutedEventArgs e)
+    {
+        AdministratorWindow window = new();
+        window.Show();
+        Close();
     }
 }
